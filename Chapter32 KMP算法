@@ -1,1 +1,57 @@
+void next(char* p,int sizeP,int* delta){
+	delta[0]=0;
+	delta[1]=0;
+	for (int j=2;j<=sizeP;j++){
+		bool mark;
+		for(int i=j-1;i>=1;i--){
+			mark=true;
+			int max=i,tem=j-1;
+			while(max>=1){
+				if (p[max-1]!=p[tem]){
+					mark=false;
+					break;
+				}
+				else{
+					max--,tem--;
+				}
+			}
+			if (mark){
+				delta[j]=i;
+				break;
+			}
+		}
+		if (!mark){
+			delta[j]=0;
+		}
+	}
+}
 
+int kmp(char* p,int sizeP,char* text,int sizeText,int* next,int* result){
+	int head=0,size=0;
+	while(head<=sizeText-sizeP){
+		bool mark=true;
+		int s=0,q=0;
+		for (int i=0;i<sizeP;i++){
+			if (p[i]!=text[s+i]){
+				q=i;
+				mark=false;
+				break;
+			}
+		}
+		if (mark){
+			result[size]=head;
+			size++;
+			q=sizeP;
+			s=q-next[q];
+			head=head+s;
+		}
+		else{
+			if (q==0)
+				s=1;
+			else
+				s=q-next[q];
+			head=head+s;
+		}
+	}
+	return size;
+}
