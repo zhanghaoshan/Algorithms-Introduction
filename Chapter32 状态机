@@ -1,0 +1,35 @@
+// p为模式字符串，sizeP为p的长度，a为该状态下的输入，q为状态数
+int find(char* p,int sizeP,char a,int q){
+	int max=q+1;
+	if (q+1>sizeP)
+		max=sizeP;
+	for(int i=max;i>=1;i--){
+		bool mark=true;
+		if (p[i-1]!=a){
+			continue;
+		}
+		if (p[i-1]==a && i==1)
+			return 1;
+
+		int tem1=i-1,tem2=q-1;
+		while(tem1>=1){
+			if (p[tem2]!=p[(tem1)-1]){
+				mark=false;
+				break;
+			}
+			else
+				tem1--,tem2--;
+		}
+		if (mark)
+			return i;
+	}
+	return 0;		
+}
+//p，模式，s，模式中所有出现的字母集合（无重复），sizeP，模式长度，sizeS，集合长度 ，delta，转移函数矩阵
+void macher(char* p,char* s,int sizeP,int sizeS,int** delta){
+	for (int q=0;q<=sizeP;q++){
+		for (int i=0;i<sizeS;i++){
+			delta[q][i]=find(p,sizeP,s[i],q);
+		}
+	}
+}
