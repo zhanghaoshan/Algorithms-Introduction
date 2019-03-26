@@ -5,7 +5,7 @@ void next(char* p,int sizeP,int* delta){
 		bool mark;
 		for(int i=j-1;i>=1;i--){
 			mark=true;
-			int max=i,tem=j-1;
+			int max=i,tem=j-1;   // i为可能的公共子缀长度，max=i，max-1指向前缀的最后一个元素，tem指向后缀的最后一个元素。
 			while(max>=1){
 				if (p[max-1]!=p[tem]){
 					mark=false;
@@ -33,8 +33,8 @@ int kmp(char* p,int sizeP,char* text,int sizeText,int* next,int* result){
 		bool mark=true;
 
 		for (int i=0;i<sizeP;i++){
-			if (p[i]!=text[head+i]){
-				q=i;
+			if (p[i]!=text[head+i]){   //head指向text中待匹配字符串首位置
+				q=i;              //匹配失败，则q为当前状态数
 				mark=false;
 				break;
 			}
@@ -42,12 +42,12 @@ int kmp(char* p,int sizeP,char* text,int sizeText,int* next,int* result){
 		if (mark){
 			result[size]=head;
 			size++;
-			q=sizeP;
+			q=sizeP;          //陪陪失败才会更新q，所以成功后也需要更新q
 			s=q-next[q];
 			head=head+s;
 		}
 		else{
-			if (q==0)
+			if (q==0)      //q=0时，next[q]=0，则不能按照公式移动，需要指定移动一位。更好的办法是，next[0]=-1，这里就方便了。
 				s=1;
 			else
 				s=q-next[q];
