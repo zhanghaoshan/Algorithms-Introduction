@@ -28,11 +28,12 @@ void next(char* p,int sizeP,int* delta){
 
 int kmp(char* p,int sizeP,char* text,int sizeText,int* next,int* result){
 	int head=0,size=0;
+	int s=0,q=0;
 	while(head<=sizeText-sizeP){
 		bool mark=true;
-		int s=0,q=0;
+
 		for (int i=0;i<sizeP;i++){
-			if (p[i]!=text[s+i]){
+			if (p[i]!=text[head+i]){
 				q=i;
 				mark=false;
 				break;
