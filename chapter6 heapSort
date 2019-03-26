@@ -1,0 +1,121 @@
+class heap{
+private:
+	int *heapArray;
+	int currentSize,maxSize;
+	int returnParent(int n){
+		return (n-1)/2;
+	}
+	int returnLeftChild(int n){
+		return 2*n+1;
+	}
+	int returnRightChild(int n){
+		return 2*n+2;
+	}
+	void swap(int& a,int& b){
+		int tem=a;
+		a=b;
+		b=tem;
+	}
+	bool isLeaf(int i){
+		int border=returnParent(currentSize-1);   //currentSize-1是最后一个树叶的标号，返回的是最后一个树的标号，大于border的都是树叶
+		if (i>border)
+			return true;
+		else 
+			return false;
+	}
+
+public:
+
+	heap(int* array,int currentsize,int maxsize=100){
+		currentSize=currentsize,maxSize=maxsize;
+		heapArray=new int[maxSize];
+		for(int i=0;i<currentSize;i++)
+			heapArray[i]=array[i];
+	}
+	~heap(){
+		delete[] heapArray;
+	}
+	void maxDelete(int i);
+	void maxInsert(int i);
+	void maxSiftUp(int i);
+	void maxSiftDown(int i);
+	void maxHeap();
+	void outHeap();
+	void maxHeapSort(int * result);
+
+};
+
+void heap::outHeap(){
+	for (int i=0;i<currentSize;i++)
+		cout<<heapArray[i]<<endl;
+}
+
+void heap::maxSiftUp(int i){
+	int parent;
+	while(i!=0){
+		parent=returnParent(i);
+		if (heapArray[i]>heapArray[parent]){
+			swap(heapArray[i],heapArray[parent]);
+			i=parent;
+		}
+		else 
+			break;
+	}
+}
+
+void heap::maxInsert(int i){
+	heapArray[currentSize]=i;
+	currentSize++;
+	maxSiftUp(currentSize-1);
+
+}
+
+void heap::maxSiftDown(int i){
+	if (i==0 && currentSize==1)
+		return;                                    //这里还需要仔细研究一下***************************************************************************************
+	int leftChild,rightChild;
+	while(!isLeaf(i)){
+		leftChild=returnLeftChild(i);
+		rightChild=returnRightChild(i);
+		if (i==returnParent(currentSize-1) && currentSize%2==0){
+			if (heapArray[i]<heapArray[leftChild])
+				swap(heapArray[i],heapArray[leftChild]);
+			return;
+		}
+		int max;
+		if (heapArray[leftChild]>=heapArray[rightChild])
+			max=leftChild;
+		else 
+			max=rightChild;
+		if (heapArray[i]<heapArray[max]){
+			swap(heapArray[i],heapArray[max]);
+			i=max;
+		}
+		else
+			return;
+	}
+}
+
+void heap::maxDelete(int i){
+	heapArray[i]=heapArray[currentSize-1];
+	currentSize--;
+	maxSiftDown(i);
+	
+}
+
+void heap::maxHeap(){
+	int border=returnParent(currentSize-1);   //树叶不用整定，所以border是最后一个有叶的，也是最后一个需要整定的。
+	for (int i=border;i>=0;i--){
+		maxSiftDown(i);
+	}
+}
+
+void heap::maxHeapSort(int* result){
+	maxHeap();
+	int index=0;
+	while(currentSize>0){
+		result[index]=heapArray[0];
+		maxDelete(0);
+		index++;
+	}
+}
